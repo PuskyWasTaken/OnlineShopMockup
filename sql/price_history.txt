@@ -1,0 +1,19 @@
+-- DROP TABLE public.price_history;
+
+CREATE TABLE public.price_history
+(
+    id bigint NOT NULL,
+    value numeric(21,2) NOT NULL,
+    effective_date timestamp without time zone NOT NULL,
+    currency_id bigint,
+    product_id bigint,
+    CONSTRAINT price_history_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_price_history_currency_id FOREIGN KEY (currency_id)
+        REFERENCES public.currency (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk_price_history_product_id FOREIGN KEY (product_id)
+        REFERENCES public.product (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
