@@ -115,6 +115,25 @@ public class ProductResource {
     }
 
     /**
+     * {@code GET  /products/productCode/:productCode} : get the "productCode" product.
+     *
+     * @param productCode the productCode of the product to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the product, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/products/productCode/{productCode}")
+    public ResponseEntity<Product> getProductById(@PathVariable String productCode) {
+
+        log.debug("REST request to get Product with Product ID : {}", productCode);
+        Optional<Product> product = productRepository.findByProductCode(productCode);
+
+        /* Only Return the latest price, not the whole Product */
+        final ResponseEntity<Product> responseEntity = ResponseUtil.wrapOrNotFound(product);
+
+        return responseEntity;
+    }
+
+
+    /**
      * {@code GET  /products/:productCode} : get the "productCode" product.
      *
      * @param productCode the productCode of the product to retrieve.
@@ -139,9 +158,8 @@ public class ProductResource {
                 final BigDecimal baseExchangeRate = priceHistory.getCurrency().getBaseExchangeRate();
 
                 /* Is the exchange rate different that the base one? */
-                if (!baseExchangeRate.equals(PuskyConstants.EUR_RATE)) {
+                if (!priceHistory.getCurrency().getCurrencyKey().equals(CurrencyKeyList.EUR))
                     latestPrice = Optional.of((priceHistory.getValue().divide(baseExchangeRate, 2, RoundingMode.HALF_UP)));
-                }
             }
 
 
