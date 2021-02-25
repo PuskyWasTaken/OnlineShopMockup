@@ -107,7 +107,7 @@ public class ProductResource {
 
         Optional<BigDecimal> latestPrice = productService.getLatestPriceOfProduct(product);
 
-        final String defaultCurrency = Translator.toLocale("default.currency");
+        final String defaultCurrency = Translator.translate("default.currency");
         CurrencyKeyList currencyKey = CurrencyKeyList.EUR;
 
         if (latestPrice.isPresent()) {
@@ -124,7 +124,6 @@ public class ProductResource {
                     /* We have to convert to a new currency */
                     log.info("Client currencyKey: " + currencyKey);
 
-                    // TODO: Pusky Convert to the client's currency
                     final Currency currency = currencyRepository.findByCurrencyKey(currencyKey);
 
                     /* Price in EUR */
@@ -137,6 +136,6 @@ public class ProductResource {
         }
 
         /* Only Return the latest price, not the whole Product */
-        return ResponseUtil.wrapOrInvalid(latestPrice, Translator.toLocale("product.invalid"));
+        return ResponseUtil.wrapOrInvalid(latestPrice, Translator.translate("product.invalid"));
     }
 }
