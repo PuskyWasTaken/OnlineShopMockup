@@ -8,6 +8,7 @@ import com.pusky.onlineshopmockup.util.PaginationUtil;
 import com.pusky.onlineshopmockup.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -39,10 +41,12 @@ public class ProductResource {
 
     private final ProductRepository productRepository;
     private final ProductService productService;
+    private MessageSource messageSource;
 
-    public ProductResource(ProductRepository productRepository, ProductService productService) {
+    public ProductResource(ProductRepository productRepository, ProductService productService, MessageSource messageSource) {
         this.productRepository = productRepository;
         this.productService = productService;
+        this.messageSource = messageSource;
     }
 
 
@@ -98,8 +102,11 @@ public class ProductResource {
         Optional<BigDecimal> latestPrice = productService.getLatestPriceOfProduct(product);
 
 
+        Locale locale = Locale.forLanguageTag("jp");
+        final String message = messageSource.getMessage("product.invalid", null, locale);
+
         /* Only Return the latest price, not the whole Product */
-        final ResponseEntity<BigDecimal> responseEntity = ResponseUtil.wrapOrInvalid(latestPrice);
+        final ResponseEntity<BigDecimal> responseEntity = ResponseUtil.wrapOrInvalid(latestPrice, message);
 
         return responseEntity;
     }

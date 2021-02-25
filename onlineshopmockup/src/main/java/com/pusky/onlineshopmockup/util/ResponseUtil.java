@@ -13,13 +13,19 @@ public interface ResponseUtil {
     }
 
     static <X> ResponseEntity<X> wrapOrInvalid(Optional<X> maybeResponse) {
-        return wrap(maybeResponse, null, HttpStatus.UNPROCESSABLE_ENTITY, "The requested product is invalid!");
-        /*
-        *           Why use UNPROCESSABLE_ENTITY.
-        *           https://tools.ietf.org/html/rfc4918#section-11.2
-        *
-        */
+        return wrapOrInvalid(maybeResponse, "The requested product is invalid!");
     }
+
+    static <X> ResponseEntity<X> wrapOrInvalid(Optional<X> maybeResponse, String message) {
+        return wrap(maybeResponse, null, HttpStatus.UNPROCESSABLE_ENTITY, message);
+        /*
+         *           Why use UNPROCESSABLE_ENTITY.
+         *           https://tools.ietf.org/html/rfc4918#section-11.2
+         *
+         */
+    }
+
+
 
     static <X> ResponseEntity<X> wrap(final Optional<X> maybeResponse, final HttpHeaders header, final HttpStatus httpStatus, final String message) {
         return maybeResponse.map((response) -> (
