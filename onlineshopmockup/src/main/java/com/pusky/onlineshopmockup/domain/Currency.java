@@ -94,9 +94,9 @@ public class Currency implements Serializable {
     @Override
     public String toString() {
         return "Currency{" +
-            "id=" + getId() +
-            ", currencyKey='" + getCurrencyKey() + "'" +
-            ", baseExchangeRate=" + getBaseExchangeRate() +
-            "}";
+                "id=" + getId() +
+                ", currencyKey='" + getCurrencyKey() + "'" +
+                ", baseExchangeRate=" + getBaseExchangeRate() +
+                "}";
     }
 }

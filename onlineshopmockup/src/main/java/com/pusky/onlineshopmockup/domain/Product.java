@@ -39,7 +39,7 @@ public class Product implements Serializable {
     @Column(name = "image")
     private String image;
 
-    @OneToMany(mappedBy = "product", fetch= FetchType.EAGER)
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<PriceHistory> priceHistories = new HashSet<>();
 
@@ -156,11 +156,11 @@ public class Product implements Serializable {
     @Override
     public String toString() {
         return "Product{" +
-            "id=" + getId() +
-            ", productCode='" + getProductCode() + "'" +
-            ", state='" + getState() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", image='" + getImage() + "'" +
-            "}";
+                "id=" + getId() +
+                ", productCode='" + getProductCode() + "'" +
+                ", state='" + getState() + "'" +
+                ", description='" + getDescription() + "'" +
+                ", image='" + getImage() + "'" +
+                "}";
     }
 }

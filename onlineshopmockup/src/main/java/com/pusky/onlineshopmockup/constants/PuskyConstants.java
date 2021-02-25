@@ -13,10 +13,10 @@ public class PuskyConstants {
     public static final String CLIENT_APP_NAME = "client";
 
     /* Exchange rate for various currencies based on EUR (base currency)
-    *  Why use a base currency? See http://www.yacoset.com/how-to-handle-currency-conversions under
-    *  Handling currency conversions 1: Use a "base currency" for any amount < $100,000
-    *  for my reference.
-    */
+     *  Why use a base currency? See http://www.yacoset.com/how-to-handle-currency-conversions under
+     *  Handling currency conversions 1: Use a "base currency" for any amount < $100,000
+     *  for my reference.
+     */
     public static final String EUR_RATE = "1.00";
     public static final String USD_RATE = "1.21";
     public static final String RON_RATE = "4.87";
@@ -24,6 +24,7 @@ public class PuskyConstants {
     public static final String YEN_RATE = "128.58";
 
     public static final Map<CurrencyKeyList, BigDecimal> CURRENCY_KEY_DECIMAL_MAP;
+
     static {
         CURRENCY_KEY_DECIMAL_MAP = new HashMap<>();
         CURRENCY_KEY_DECIMAL_MAP.put(CurrencyKeyList.EUR, new BigDecimal(EUR_RATE));

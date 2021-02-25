@@ -60,8 +60,8 @@ public class DatabaseConfiguration {
         for (int j = 0; j < 100000; j++) {
 
 
-           AtomicInteger k = new AtomicInteger();
-           currencies.forEach(currency -> {
+            AtomicInteger k = new AtomicInteger();
+            currencies.forEach(currency -> {
 
                 /* Save the product */
                 final Product product = productRepository.save(new Product(i.toString(), ProductState.VALID));

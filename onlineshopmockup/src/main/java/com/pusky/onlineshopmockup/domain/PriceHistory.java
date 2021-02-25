@@ -1,8 +1,6 @@
 package com.pusky.onlineshopmockup.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -132,9 +130,9 @@ public class PriceHistory implements Serializable {
     @Override
     public String toString() {
         return "PriceHistory{" +
-            "id=" + getId() +
-            ", value=" + getValue() +
-            ", effectiveDate='" + getEffectiveDate() + "'" +
-            "}";
+                "id=" + getId() +
+                ", value=" + getValue() +
+                ", effectiveDate='" + getEffectiveDate() + "'" +
+                "}";
     }
 }
