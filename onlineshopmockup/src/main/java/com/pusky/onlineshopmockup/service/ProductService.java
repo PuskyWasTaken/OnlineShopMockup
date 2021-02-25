@@ -71,7 +71,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<Product> findByProductState(ProductState productState) {
 
-        log.debug("Find by productState : {}", productState);
+        log.info("Find by productState : {}", productState);
         return productRepository.findAll(Specification.where(hasProductState(productState)));
     }
 }

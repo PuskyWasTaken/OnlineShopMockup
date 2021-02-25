@@ -1,7 +1,10 @@
 package com.pusky.onlineshopmockup.web.rest;
 
 import com.pusky.onlineshopmockup.constants.PuskyConstants;
+import com.pusky.onlineshopmockup.domain.Currency;
 import com.pusky.onlineshopmockup.domain.Product;
+import com.pusky.onlineshopmockup.domain.enumeration.CurrencyKeyList;
+import com.pusky.onlineshopmockup.repository.CurrencyRepository;
 import com.pusky.onlineshopmockup.repository.ProductRepository;
 import com.pusky.onlineshopmockup.service.ProductService;
 import com.pusky.onlineshopmockup.util.PaginationUtil;
@@ -22,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -43,17 +46,19 @@ public class ProductResource {
     private final ProductRepository productRepository;
     private final ProductService productService;
     private MessageSource messageSource;
+    private CurrencyRepository currencyRepository;
 
-    public ProductResource(ProductRepository productRepository, ProductService productService, MessageSource messageSource) {
+    public ProductResource(ProductRepository productRepository, ProductService productService, MessageSource messageSource, CurrencyRepository currencyRepository) {
         this.productRepository = productRepository;
         this.productService = productService;
         this.messageSource = messageSource;
+        this.currencyRepository = currencyRepository;
     }
 
 
 //    @GetMapping("/products")
 //    public List<Product> getAllProducts() {
-//        log.debug("REST request to get all Products");
+//        log.info("REST request to get all Products");
 //        return productRepository.findAll();
 //    }
 
@@ -65,7 +70,7 @@ public class ProductResource {
      */
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts(Pageable pageable) {
-        log.debug("REST request to get a page of Products");
+        log.info("REST request to get a page of Products");
         Page<Product> page = productRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -80,7 +85,7 @@ public class ProductResource {
     @GetMapping("/products/productCode/{productCode}")
     public ResponseEntity<Product> getProductById(@PathVariable String productCode) {
 
-        log.debug("REST request to get Product with Product ID : {}", productCode);
+        log.info("REST request to get Product with Product ID : {}", productCode);
         Optional<Product> product = productRepository.findByProductCode(productCode);
 
         /* Only Return the latest price, not the whole Product */
@@ -97,19 +102,41 @@ public class ProductResource {
      */
     @GetMapping("/products/{productCode}")
     public ResponseEntity<BigDecimal> getProductByProductCode(@PathVariable String productCode) {
-        log.debug("REST request to get Product with Product ID : {}", productCode);
+        log.info("REST request to get Product with Product ID : {}", productCode);
         Optional<Product> product = productRepository.findByProductCode(productCode);
 
         Optional<BigDecimal> latestPrice = productService.getLatestPriceOfProduct(product);
 
+        final String defaultCurrency = Translator.toLocale("default.currency");
+        CurrencyKeyList currencyKey = CurrencyKeyList.EUR;
 
-//        Locale locale = Locale.forLanguageTag("jp");
-//        final String message = messageSource.getMessage("product.invalid", null, Locale.getDefault());
-        final String locale = Translator.toLocale("product.invalid");
+        if (latestPrice.isPresent()) {
+            try {
+                currencyKey = CurrencyKeyList.valueOf(defaultCurrency);
+
+            } catch (IllegalArgumentException e) {
+                log.error("CurrencyKeyList Enum value for string: " + defaultCurrency + " does not exist!");
+
+            } finally {
+
+                if (!currencyKey.equals(CurrencyKeyList.EUR)) {
+
+                    /* We have to convert to a new currency */
+                    log.info("Client currencyKey: " + currencyKey);
+
+                    // TODO: Pusky Convert to the client's currency
+                    final Currency currency = currencyRepository.findByCurrencyKey(currencyKey);
+
+                    /* Price in EUR */
+                    final BigDecimal convertedPrice = latestPrice.get().multiply(currency.getBaseExchangeRate()).setScale(2, RoundingMode.HALF_UP);
+                    latestPrice = Optional.of(convertedPrice);
+
+                    log.info("Client currency is: " + currency);
+                }
+            }
+        }
 
         /* Only Return the latest price, not the whole Product */
-        final ResponseEntity<BigDecimal> responseEntity = ResponseUtil.wrapOrInvalid(latestPrice, locale);
-
-        return responseEntity;
+        return ResponseUtil.wrapOrInvalid(latestPrice, Translator.toLocale("product.invalid"));
     }
 }

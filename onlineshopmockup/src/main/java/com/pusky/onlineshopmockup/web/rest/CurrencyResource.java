@@ -43,7 +43,7 @@ public class CurrencyResource {
      */
     @GetMapping("/currencies")
     public List<Currency> getAllCurrencies() {
-        log.debug("REST request to get all Currencies");
+        log.info("REST request to get all Currencies");
         return currencyRepository.findAll();
     }
 
@@ -55,7 +55,7 @@ public class CurrencyResource {
      */
     @GetMapping("/currencies/{id}")
     public ResponseEntity<Currency> getCurrency(@PathVariable Long id) {
-        log.debug("REST request to get Currency : {}", id);
+        log.info("REST request to get Currency : {}", id);
         Optional<Currency> currency = currencyRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(currency);
     }

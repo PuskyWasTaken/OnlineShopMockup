@@ -38,7 +38,7 @@ public class BatchJobs {
 //    @Scheduled(fixedDelay = 1000)
     public void launchJob() throws Exception {
 
-        log.debug("Launched export job: ----");
+        log.info("Launched export job: ----");
 
         final String csvFilePath = "VALID_PRODUCTS_" + ZonedDateTime.now().toLocalDate() + ".csv";
 

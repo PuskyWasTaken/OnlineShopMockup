@@ -43,7 +43,7 @@ public class PriceHistoryResource {
      */
     @GetMapping("/price-histories")
     public List<PriceHistory> getAllPriceHistories() {
-        log.debug("REST request to get all PriceHistories");
+        log.info("REST request to get all PriceHistories");
         return priceHistoryRepository.findAll();
     }
 
@@ -55,7 +55,7 @@ public class PriceHistoryResource {
      */
     @GetMapping("/price-histories/{id}")
     public ResponseEntity<PriceHistory> getPriceHistory(@PathVariable Long id) {
-        log.debug("REST request to get PriceHistory : {}", id);
+        log.info("REST request to get PriceHistory : {}", id);
         Optional<PriceHistory> priceHistory = priceHistoryRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(priceHistory);
     }
