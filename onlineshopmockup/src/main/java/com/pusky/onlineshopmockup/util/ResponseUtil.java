@@ -21,7 +21,6 @@ public interface ResponseUtil {
         */
     }
 
-
     static <X> ResponseEntity<X> wrap(final Optional<X> maybeResponse, final HttpHeaders header, final HttpStatus httpStatus, final String message) {
         return maybeResponse.map((response) -> (
                 ResponseEntity.ok().headers(header)).body(response)).orElseThrow(
