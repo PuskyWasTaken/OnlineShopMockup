@@ -6,6 +6,7 @@ import com.pusky.onlineshopmockup.repository.ProductRepository;
 import com.pusky.onlineshopmockup.service.ProductService;
 import com.pusky.onlineshopmockup.util.PaginationUtil;
 import com.pusky.onlineshopmockup.util.ResponseUtil;
+import com.pusky.onlineshopmockup.util.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
@@ -102,11 +103,12 @@ public class ProductResource {
         Optional<BigDecimal> latestPrice = productService.getLatestPriceOfProduct(product);
 
 
-        Locale locale = Locale.forLanguageTag("jp");
-        final String message = messageSource.getMessage("product.invalid", null, locale);
+//        Locale locale = Locale.forLanguageTag("jp");
+//        final String message = messageSource.getMessage("product.invalid", null, Locale.getDefault());
+        final String locale = Translator.toLocale("product.invalid");
 
         /* Only Return the latest price, not the whole Product */
-        final ResponseEntity<BigDecimal> responseEntity = ResponseUtil.wrapOrInvalid(latestPrice, message);
+        final ResponseEntity<BigDecimal> responseEntity = ResponseUtil.wrapOrInvalid(latestPrice, locale);
 
         return responseEntity;
     }

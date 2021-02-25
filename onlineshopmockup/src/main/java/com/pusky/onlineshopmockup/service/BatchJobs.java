@@ -26,10 +26,6 @@ public class BatchJobs {
     private final ProductRepository productRepository;
     private final ProductService productService;
 
-    private AtomicBoolean enabled = new AtomicBoolean(true);
-    private AtomicInteger batchRunCounter = new AtomicInteger(0);
-
-
     public BatchJobs(ProductRepository productRepository, ProductService productService) {
         this.productRepository = productRepository;
         this.productService = productService;
