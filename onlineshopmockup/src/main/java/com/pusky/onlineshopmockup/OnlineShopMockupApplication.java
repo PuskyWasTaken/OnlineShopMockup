@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -15,10 +16,11 @@ import java.util.Collection;
 
 
 @SpringBootApplication
+@EnableScheduling
 @EnableConfigurationProperties(ApplicationProperties.class)
 public class OnlineShopMockupApplication {
 
-	private static final Logger log = LoggerFactory.getLogger(OnlineShopMockupApplication.class);
+	private final Logger log = LoggerFactory.getLogger(OnlineShopMockupApplication.class);
 	private final Environment env;
 
 	public OnlineShopMockupApplication(Environment env) {

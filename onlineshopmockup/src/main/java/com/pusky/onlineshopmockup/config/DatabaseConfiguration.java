@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Configuration
 public class DatabaseConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
+    private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
     @Bean
     CommandLineRunner initDatabase(CurrencyRepository currencyRepository, ProductRepository productRepository, PriceHistoryRepository priceHistoryRepository) {

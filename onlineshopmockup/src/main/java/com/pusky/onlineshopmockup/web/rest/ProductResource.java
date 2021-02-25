@@ -6,6 +6,7 @@ import com.pusky.onlineshopmockup.domain.Product;
 import com.pusky.onlineshopmockup.domain.enumeration.CurrencyKeyList;
 import com.pusky.onlineshopmockup.domain.enumeration.ProductState;
 import com.pusky.onlineshopmockup.repository.ProductRepository;
+import com.pusky.onlineshopmockup.service.ProductService;
 import com.pusky.onlineshopmockup.util.HeaderUtil;
 import com.pusky.onlineshopmockup.util.PaginationUtil;
 import com.pusky.onlineshopmockup.util.ResponseUtil;
@@ -44,13 +45,11 @@ public class ProductResource {
     private final String applicationName = PuskyConstants.CLIENT_APP_NAME;
 
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public ProductResource(ProductRepository productRepository) {
+    public ProductResource(ProductRepository productRepository, ProductService productService) {
         this.productRepository = productRepository;
-    }
-
-    private static Optional<PriceHistory> getLatestPriceHistory(Product productObj) {
-        return productObj.getPriceHistories().stream().max(Comparator.comparing(PriceHistory::getEffectiveDate));
+        this.productService = productService;
     }
 
     /**
@@ -143,27 +142,9 @@ public class ProductResource {
     public ResponseEntity<BigDecimal> getProductByProductCode(@PathVariable String productCode) {
         log.debug("REST request to get Product with Product ID : {}", productCode);
         Optional<Product> product = productRepository.findByProductCode(productCode);
-        Optional<BigDecimal> latestPrice = Optional.empty();
+        
+        Optional<BigDecimal> latestPrice = productService.getLatestPriceOfProduct(product);
 
-        if (product.isPresent() && product.get().getState().equals(ProductState.VALID)) {
-
-            final Optional<PriceHistory> latestPriceHistory = ProductResource.getLatestPriceHistory(product.get());
-
-            latestPrice = Optional.of(latestPriceHistory.get().getValue());
-
-            /* Get the latest price  */
-            if (latestPriceHistory.isPresent()) {
-
-                final PriceHistory priceHistory = latestPriceHistory.get();
-                final BigDecimal baseExchangeRate = priceHistory.getCurrency().getBaseExchangeRate();
-
-                /* Is the exchange rate different that the base one? */
-                if (!priceHistory.getCurrency().getCurrencyKey().equals(CurrencyKeyList.EUR))
-                    latestPrice = Optional.of((priceHistory.getValue().divide(baseExchangeRate, 2, RoundingMode.HALF_UP)));
-            }
-
-
-        }
 
         /* Only Return the latest price, not the whole Product */
         final ResponseEntity<BigDecimal> responseEntity = ResponseUtil.wrapOrInvalid(latestPrice);

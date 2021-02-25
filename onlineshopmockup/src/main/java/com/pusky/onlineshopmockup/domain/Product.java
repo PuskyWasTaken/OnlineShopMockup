@@ -39,7 +39,7 @@ public class Product implements Serializable {
     @Column(name = "image")
     private String image;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch= FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<PriceHistory> priceHistories = new HashSet<>();
 

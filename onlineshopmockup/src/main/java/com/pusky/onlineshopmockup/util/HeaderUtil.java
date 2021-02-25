@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 
 /** Header Util - Not my code~!! Never use for production **/
 public final class HeaderUtil {
-    private static final Logger log = LoggerFactory.getLogger(HeaderUtil.class);
+    private final static Logger log = LoggerFactory.getLogger(HeaderUtil.class);
 
     private HeaderUtil() {
     }
