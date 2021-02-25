@@ -1,5 +1,6 @@
 package com.pusky.onlineshopmockup.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pusky.onlineshopmockup.domain.enumeration.ProductState;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -41,6 +42,7 @@ public class Product implements Serializable {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = "product", allowSetters = true)
     private Set<PriceHistory> priceHistories = new HashSet<>();
 
     public Product(@NotNull String productCode, @NotNull ProductState state) {
