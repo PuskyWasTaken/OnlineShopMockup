@@ -1,11 +1,14 @@
 package com.pusky.onlineshopmockup.service;
 
 import com.pusky.onlineshopmockup.constants.PuskyConstants;
+import com.pusky.onlineshopmockup.domain.Currency;
 import com.pusky.onlineshopmockup.domain.PriceHistory;
 import com.pusky.onlineshopmockup.domain.Product;
 import com.pusky.onlineshopmockup.domain.enumeration.CurrencyKeyList;
 import com.pusky.onlineshopmockup.domain.enumeration.ProductState;
+import com.pusky.onlineshopmockup.repository.CurrencyRepository;
 import com.pusky.onlineshopmockup.repository.ProductRepository;
+import com.pusky.onlineshopmockup.util.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,13 +29,47 @@ public class ProductService {
     private final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     private final ProductRepository productRepository;
+    private final CurrencyRepository currencyRepository;
 
-    public ProductService(ProductRepository productRepository) {
+
+    public ProductService(ProductRepository productRepository, CurrencyRepository currencyRepository) {
         this.productRepository = productRepository;
+        this.currencyRepository = currencyRepository;
     }
 
     public static Optional<PriceHistory> getLatestPriceHistory(Product productObj) {
         return productObj.getPriceHistories().stream().max(Comparator.comparing(PriceHistory::getEffectiveDate));
+    }
+
+    public BigDecimal getLocalisedCurrency(BigDecimal latestPrice) {
+
+        final String defaultCurrency = Translator.translate("default.currency");
+        CurrencyKeyList currencyKey = CurrencyKeyList.EUR;
+
+        try {
+            currencyKey = CurrencyKeyList.valueOf(defaultCurrency);
+
+        } catch (IllegalArgumentException e) {
+            log.error("CurrencyKeyList Enum value for string: " + defaultCurrency + " does not exist!");
+
+        } finally {
+
+            if (!currencyKey.equals(CurrencyKeyList.EUR)) {
+
+                /* We have to convert to a new currency */
+                log.info("Client currencyKey: " + currencyKey);
+
+                final Currency currency = currencyRepository.findByCurrencyKey(currencyKey);
+
+                /* Price in EUR */
+                final BigDecimal convertedPrice = latestPrice.multiply(currency.getBaseExchangeRate()).setScale(PuskyConstants.BIG_DECIMAL_SCALE, RoundingMode.HALF_UP);
+                log.info("Client currency is: " + currency);
+
+                return convertedPrice;
+            }
+        }
+
+        return latestPrice;
     }
 
     public Optional<BigDecimal> getLatestPriceOfProduct(Optional<Product> product) {

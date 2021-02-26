@@ -12,7 +12,6 @@ import com.pusky.onlineshopmockup.util.ResponseUtil;
 import com.pusky.onlineshopmockup.util.Translator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -101,37 +100,14 @@ public class ProductResource {
         log.info("REST request to get Product with Product ID : {}", productCode);
         Optional<Product> product = productRepository.findByProductCode(productCode);
 
-        Optional<BigDecimal> latestPrice = productService.getLatestPriceOfProduct(product);
-
-        final String defaultCurrency = Translator.translate("default.currency");
-        CurrencyKeyList currencyKey = CurrencyKeyList.EUR;
+        Optional<BigDecimal> latestPrice = productService.getLatestPriceOfProduct(product).map(bigDecimal -> productService.getLocalisedCurrency(bigDecimal));
 
         if (latestPrice.isPresent()) {
-            try {
-                currencyKey = CurrencyKeyList.valueOf(defaultCurrency);
-
-            } catch (IllegalArgumentException e) {
-                log.error("CurrencyKeyList Enum value for string: " + defaultCurrency + " does not exist!");
-
-            } finally {
-
-                if (!currencyKey.equals(CurrencyKeyList.EUR)) {
-
-                    /* We have to convert to a new currency */
-                    log.info("Client currencyKey: " + currencyKey);
-
-                    final Currency currency = currencyRepository.findByCurrencyKey(currencyKey);
-
-                    /* Price in EUR */
-                    final BigDecimal convertedPrice = latestPrice.get().multiply(currency.getBaseExchangeRate()).setScale(PuskyConstants.BIG_DECIMAL_SCALE, RoundingMode.HALF_UP);
-                    latestPrice = Optional.of(convertedPrice);
-
-                    log.info("Client currency is: " + currency);
-                }
-            }
         }
 
         /* Only Return the latest price, not the whole Product */
         return ResponseUtil.wrapOrInvalid(latestPrice, Translator.translate("product.invalid"));
     }
+
+
 }
