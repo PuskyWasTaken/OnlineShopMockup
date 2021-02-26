@@ -1,6 +1,7 @@
 package com.pusky.onlineshopmockup.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pusky.onlineshopmockup.constants.PuskyConstants;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -25,7 +26,7 @@ public class PriceHistory implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "value", precision = 21, scale = 2, nullable = false)
+    @Column(name = "value", precision = PuskyConstants.BIG_DECIMAL_PRECISION, scale = PuskyConstants.BIG_DECIMAL_SCALE, nullable = false)
     private BigDecimal value;
 
     @NotNull

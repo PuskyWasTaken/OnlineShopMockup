@@ -1,5 +1,6 @@
 package com.pusky.onlineshopmockup.service;
 
+import com.pusky.onlineshopmockup.constants.PuskyConstants;
 import com.pusky.onlineshopmockup.domain.PriceHistory;
 import com.pusky.onlineshopmockup.domain.Product;
 import com.pusky.onlineshopmockup.domain.enumeration.CurrencyKeyList;
@@ -52,7 +53,7 @@ public class ProductService {
 
                 /* Is the exchange rate different that the base one? */
                 if (!priceHistory.getCurrency().getCurrencyKey().equals(CurrencyKeyList.EUR))
-                    latestPrice = Optional.of((priceHistory.getValue().divide(baseExchangeRate, 2, RoundingMode.HALF_UP)));
+                    latestPrice = Optional.of((priceHistory.getValue().divide(baseExchangeRate, PuskyConstants.BIG_DECIMAL_SCALE, RoundingMode.HALF_UP)));
             }
         }
 

@@ -1,5 +1,6 @@
 package com.pusky.onlineshopmockup.domain;
 
+import com.pusky.onlineshopmockup.constants.PuskyConstants;
 import com.pusky.onlineshopmockup.domain.enumeration.CurrencyKeyList;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -29,7 +30,7 @@ public class Currency implements Serializable {
     private CurrencyKeyList currencyKey;
 
     @NotNull
-    @Column(name = "base_exchange_rate", precision = 21, scale = 2, nullable = false)
+    @Column(name = "base_exchange_rate", precision = PuskyConstants.BIG_DECIMAL_PRECISION, scale = PuskyConstants.BIG_DECIMAL_SCALE, nullable = false)
     private BigDecimal baseExchangeRate;
 
     public Currency(@NotNull CurrencyKeyList currencyKey, @NotNull BigDecimal baseExchangeRate) {

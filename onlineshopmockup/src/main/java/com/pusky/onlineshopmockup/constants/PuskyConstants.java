@@ -24,6 +24,8 @@ public class PuskyConstants {
     public static final String YEN_RATE = "128.58";
 
     public static final Map<CurrencyKeyList, BigDecimal> CURRENCY_KEY_DECIMAL_MAP;
+    public static final int BIG_DECIMAL_SCALE = 2;
+    public static final int BIG_DECIMAL_PRECISION = 21;
 
     static {
         CURRENCY_KEY_DECIMAL_MAP = new HashMap<>();

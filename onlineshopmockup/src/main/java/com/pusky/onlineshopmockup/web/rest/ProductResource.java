@@ -127,7 +127,7 @@ public class ProductResource {
                     final Currency currency = currencyRepository.findByCurrencyKey(currencyKey);
 
                     /* Price in EUR */
-                    final BigDecimal convertedPrice = latestPrice.get().multiply(currency.getBaseExchangeRate()).setScale(2, RoundingMode.HALF_UP);
+                    final BigDecimal convertedPrice = latestPrice.get().multiply(currency.getBaseExchangeRate()).setScale(PuskyConstants.BIG_DECIMAL_SCALE, RoundingMode.HALF_UP);
                     latestPrice = Optional.of(convertedPrice);
 
                     log.info("Client currency is: " + currency);
