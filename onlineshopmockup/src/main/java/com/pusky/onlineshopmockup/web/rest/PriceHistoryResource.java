@@ -28,7 +28,6 @@ public class PriceHistoryResource {
 
     private static final String ENTITY_NAME = "priceHistory";
 
-    private final String applicationName = PuskyConstants.CLIENT_APP_NAME;
 
     private final PriceHistoryRepository priceHistoryRepository;
 

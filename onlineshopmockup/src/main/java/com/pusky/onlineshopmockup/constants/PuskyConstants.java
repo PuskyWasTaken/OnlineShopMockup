@@ -7,10 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PuskyConstants {
-    public static final String SPRING_PROFILE_DEVELOPMENT = "dev";
-    public static final String SPRING_PROFILE_PRODUCTION = "prod";
-
-    public static final String CLIENT_APP_NAME = "client";
 
     /* Exchange rate for various currencies based on EUR (base currency)
      *  Why use a base currency? See http://www.yacoset.com/how-to-handle-currency-conversions under

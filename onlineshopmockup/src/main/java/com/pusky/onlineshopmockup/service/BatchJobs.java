@@ -22,11 +22,9 @@ public class BatchJobs {
 
     private static final String[] HEADERS = new String[]{"Id", "ProductCode", "State", "LatestPriceInEUR"};
     private final Logger log = LoggerFactory.getLogger(BatchJobs.class);
-    private final ProductRepository productRepository;
     private final ProductService productService;
 
-    public BatchJobs(ProductRepository productRepository, ProductService productService) {
-        this.productRepository = productRepository;
+    public BatchJobs(ProductService productService) {
         this.productService = productService;
     }
 

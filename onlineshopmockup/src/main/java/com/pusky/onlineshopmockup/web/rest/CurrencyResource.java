@@ -28,8 +28,6 @@ public class CurrencyResource {
 
     private static final String ENTITY_NAME = "currency";
 
-    private final String applicationName = PuskyConstants.CLIENT_APP_NAME;
-
     private final CurrencyRepository currencyRepository;
 
     public CurrencyResource(CurrencyRepository currencyRepository) {

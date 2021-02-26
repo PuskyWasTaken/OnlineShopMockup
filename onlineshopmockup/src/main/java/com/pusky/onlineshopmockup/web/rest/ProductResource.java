@@ -41,17 +41,14 @@ public class ProductResource {
 
     private static final String ENTITY_NAME = "product";
 
-    private final String applicationName = PuskyConstants.CLIENT_APP_NAME;
 
     private final ProductRepository productRepository;
     private final ProductService productService;
-    private MessageSource messageSource;
     private CurrencyRepository currencyRepository;
 
-    public ProductResource(ProductRepository productRepository, ProductService productService, MessageSource messageSource, CurrencyRepository currencyRepository) {
+    public ProductResource(ProductRepository productRepository, ProductService productService, CurrencyRepository currencyRepository) {
         this.productRepository = productRepository;
         this.productService = productService;
-        this.messageSource = messageSource;
         this.currencyRepository = currencyRepository;
     }
 
@@ -88,7 +85,6 @@ public class ProductResource {
         log.info("REST request to get Product with Product ID : {}", productCode);
         Optional<Product> product = productRepository.findByProductCode(productCode);
 
-        /* Only Return the latest price, not the whole Product */
         final ResponseEntity<Product> responseEntity = ResponseUtil.wrapOrNotFound(product);
 
         return responseEntity;
